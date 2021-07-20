@@ -185,8 +185,21 @@ namespace EpisodenEditor
                 ad = this.cbWerbungEnthalten.Checked,
                 start = new TimeSpan(this.dtpStartZeit.Value.Hour, this.dtpStartZeit.Value.Minute, this.dtpStartZeit.Value.Second),
                 end = new TimeSpan(this.dtpEndZeit.Value.Hour, this.dtpEndZeit.Value.Minute, this.dtpEndZeit.Value.Second),
-                subtopics = this.tbSubTopics.Text.Trim() == string.Empty ? new List<string>() : this.tbSubTopics.Text.Replace("\r\n", "\n").Split('\n').ToList(),
-        };
+            };
+
+            //Ignore all entries that are just empty or whitesapces
+            string[] subtopicArray = this.tbSubTopics.Text.Replace("\r\n", "\n").Split('\n');
+            List<string> tempSubtopics = new List<string>();
+            for (int i = 0; i < subtopicArray.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(subtopicArray[i]))
+                {
+                    tempSubtopics.Add(subtopicArray[i]);
+                }
+            }
+
+            topic.subtopics = tempSubtopics;
+
             this.podcastEpisode.topics.Add(topic);
             this.lbTopics.Items.Add(topic);
 
