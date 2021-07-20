@@ -259,7 +259,7 @@ namespace EpisodenEditor
                 this.gbTopic.Enabled = false;
             }
 
-
+            btnTopicSpeichern.Text = "Topic speichern";
         }
 
         private void btnTopicHinzufuegen_Click(object sender, EventArgs e)
@@ -278,6 +278,7 @@ namespace EpisodenEditor
             this.lbTopics.SelectedIndex = -1;
             CurrentTopicIndex = -1;
             this.lbTopics.SelectedItem = null;
+            btnTopicSpeichern.Text = "Topic speichern";
         }
 
         private void btnTopicEntfernen_Click(object sender, EventArgs e)
@@ -318,6 +319,7 @@ namespace EpisodenEditor
                 this.dtpEndZeit.Value = new DateTime(1999, 1, 1, topic.end.Hours, topic.end.Minutes, topic.end.Seconds);
                 this.tbSubTopics.Text = string.Join(Environment.NewLine, topic.subtopics);
                 TempEditTopic = topic;
+                btnTopicSpeichern.Text = "Topic bearbeiten";
             }
             this.gbTopic.Enabled = true;
         }
