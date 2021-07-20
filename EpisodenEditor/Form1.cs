@@ -134,7 +134,18 @@ namespace EpisodenEditor
             this.podcastEpisode.username = this.tbUserName.Text;
             this.podcastEpisode.guid = this.tbGUID.Text;
             this.podcastEpisode.title = this.tbEpisodenTitel.Text;
-            this.podcastEpisode.hosts = new List<string>(this.tbHosts.Text.Split(' '));
+
+            //Ignore all entries that are just empty or whitesapces
+            List<string> tempHosts = new List<string>();
+            for (int i = 0; i < this.tbHosts.Text.Split(' ').Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(this.tbHosts.Text.Split(' ')[i]))
+                {
+                    tempHosts.Add(this.tbHosts.Text.Split(' ')[i]);
+                }
+            }
+
+            this.podcastEpisode.hosts = tempHosts;
             this.podcastEpisode.spotify = this.tbSpotifyUrl.Text;
             this.podcastEpisode.youtube = this.tbYoutubeUrl.Text;
             this.podcastEpisode.amazon = this.tbAmazonUrl.Text;
