@@ -9,6 +9,9 @@ namespace EpisodenEditor
 {
     public partial class frmPodcastEditor : Form
     {
+        public static int CurrentTopicIndex = -1;
+        public static Topic TempEditTopic = null;
+
         private PodcastEpisode podcastEpisode;
         public frmPodcastEditor()
         {
@@ -178,39 +181,85 @@ namespace EpisodenEditor
 
         private void btnTopicSpeichern_Click(object sender, EventArgs e)
         {
-            Topic topic = new Topic()
+            //CurrentTopicIndex -1 means that the currently editet Topic is a new one. Anything else is an already existing topic!
+            if (CurrentTopicIndex == -1)
             {
-                name = tbTopic.Text,
-                community = this.cbCommunityTopic.Checked,
-                ad = this.cbWerbungEnthalten.Checked,
-                start = new TimeSpan(this.dtpStartZeit.Value.Hour, this.dtpStartZeit.Value.Minute, this.dtpStartZeit.Value.Second),
-                end = new TimeSpan(this.dtpEndZeit.Value.Hour, this.dtpEndZeit.Value.Minute, this.dtpEndZeit.Value.Second),
-            };
-
-            //Ignore all entries that are just empty or whitesapces
-            string[] subtopicArray = this.tbSubTopics.Text.Replace("\r\n", "\n").Split('\n');
-            List<string> tempSubtopics = new List<string>();
-            for (int i = 0; i < subtopicArray.Length; i++)
-            {
-                if (!string.IsNullOrWhiteSpace(subtopicArray[i]))
+                Topic topic = new Topic()
                 {
-                    tempSubtopics.Add(subtopicArray[i]);
+                    name = tbTopic.Text,
+                    community = this.cbCommunityTopic.Checked,
+                    ad = this.cbWerbungEnthalten.Checked,
+                    start = new TimeSpan(this.dtpStartZeit.Value.Hour, this.dtpStartZeit.Value.Minute, this.dtpStartZeit.Value.Second),
+                    end = new TimeSpan(this.dtpEndZeit.Value.Hour, this.dtpEndZeit.Value.Minute, this.dtpEndZeit.Value.Second),
+                };
+
+                //Ignore all entries that are just empty or whitesapces
+                string[] subtopicArray = this.tbSubTopics.Text.Replace("\r\n", "\n").Split('\n');
+                List<string> tempSubtopics = new List<string>();
+                for (int i = 0; i < subtopicArray.Length; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(subtopicArray[i]))
+                    {
+                        tempSubtopics.Add(subtopicArray[i]);
+                    }
                 }
+
+                topic.subtopics = tempSubtopics;
+
+                this.podcastEpisode.topics.Add(topic);
+                this.lbTopics.Items.Add(topic);
+
+                // Steuerelemente reseten
+                this.tbTopic.Text = string.Empty;
+                this.cbCommunityTopic.Checked = false;
+                this.cbWerbungEnthalten.Checked = false;
+                this.dtpStartZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
+                this.dtpEndZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
+                this.tbSubTopics.Text = string.Empty;
+                this.gbTopic.Enabled = false;
+            }
+            else
+            {
+                Topic topic = this.podcastEpisode.topics.Find(x => x == TempEditTopic);
+                int epIndex = this.podcastEpisode.topics.FindIndex(x => x == TempEditTopic);
+                int lbIndex = this.lbTopics.Items.IndexOf(TempEditTopic);
+
+                topic = new Topic()
+                {
+                    name = tbTopic.Text,
+                    community = this.cbCommunityTopic.Checked,
+                    ad = this.cbWerbungEnthalten.Checked,
+                    start = new TimeSpan(this.dtpStartZeit.Value.Hour, this.dtpStartZeit.Value.Minute, this.dtpStartZeit.Value.Second),
+                    end = new TimeSpan(this.dtpEndZeit.Value.Hour, this.dtpEndZeit.Value.Minute, this.dtpEndZeit.Value.Second),
+                };
+
+                //Ignore all entries that are just empty or whitesapces
+                string[] subtopicArray = this.tbSubTopics.Text.Replace("\r\n", "\n").Split('\n');
+                List<string> tempSubtopics = new List<string>();
+                for (int i = 0; i < subtopicArray.Length; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(subtopicArray[i]))
+                    {
+                        tempSubtopics.Add(subtopicArray[i]);
+                    }
+                }
+
+                topic.subtopics = tempSubtopics;
+
+                this.podcastEpisode.topics[epIndex] = topic;
+                this.lbTopics.Items[lbIndex] = topic;
+
+                // Steuerelemente reseten
+                this.tbTopic.Text = string.Empty;
+                this.cbCommunityTopic.Checked = false;
+                this.cbWerbungEnthalten.Checked = false;
+                this.dtpStartZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
+                this.dtpEndZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
+                this.tbSubTopics.Text = string.Empty;
+                this.gbTopic.Enabled = false;
             }
 
-            topic.subtopics = tempSubtopics;
 
-            this.podcastEpisode.topics.Add(topic);
-            this.lbTopics.Items.Add(topic);
-
-            // Steuerelemente reseten
-            this.tbTopic.Text = string.Empty;
-            this.cbCommunityTopic.Checked = false;
-            this.cbWerbungEnthalten.Checked = false;
-            this.dtpStartZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
-            this.dtpEndZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
-            this.tbSubTopics.Text = string.Empty;
-            this.gbTopic.Enabled = false;
         }
 
         private void btnTopicHinzufuegen_Click(object sender, EventArgs e)
@@ -225,7 +274,9 @@ namespace EpisodenEditor
             this.dtpEndZeit.Value = new DateTime(1999, 01, 01, 0, 0, 0);
             this.tbSubTopics.Text = string.Empty;
 
+
             this.lbTopics.SelectedIndex = -1;
+            CurrentTopicIndex = -1;
             this.lbTopics.SelectedItem = null;
         }
 
@@ -249,6 +300,7 @@ namespace EpisodenEditor
             }
 
             this.lbTopics.SelectedIndex = -1;
+            CurrentTopicIndex = -1;
             this.lbTopics.SelectedItem = null;
         }
 
@@ -259,12 +311,13 @@ namespace EpisodenEditor
             {
                 var topic = this.lbTopics.Items[index] as Topic;
                 this.tbTopic.Text = topic.name;
+                CurrentTopicIndex = index;
                 this.cbCommunityTopic.Checked = topic.community;
                 this.cbWerbungEnthalten.Checked = topic.ad;
                 this.dtpStartZeit.Value = new DateTime(1999, 1, 1, topic.start.Hours, topic.start.Minutes, topic.start.Seconds);
                 this.dtpEndZeit.Value = new DateTime(1999, 1, 1, topic.end.Hours, topic.end.Minutes, topic.end.Seconds);
-
                 this.tbSubTopics.Text = string.Join(Environment.NewLine, topic.subtopics);
+                TempEditTopic = topic;
             }
             this.gbTopic.Enabled = true;
         }
