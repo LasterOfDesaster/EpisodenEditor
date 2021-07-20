@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indexierung", "Indexierung\Indexierung.csproj", "{B3D15CED-2275-4D2B-A770-A1A6B55999A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpisodenEditor", "EpisodenEditor\EpisodenEditor.csproj", "{B3D15CED-2275-4D2B-A770-A1A6B55999A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
