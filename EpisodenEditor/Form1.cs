@@ -132,7 +132,7 @@ namespace EpisodenEditor
         private void btnAbschriftSpeichern_Click(object sender, EventArgs e)
         {
             this.podcastEpisode.username = this.tbUserName.Text;
-            this.podcastEpisode.guid = new Guid(this.tbGUID.Text);
+            this.podcastEpisode.guid = this.tbGUID.Text;
             this.podcastEpisode.title = this.tbEpisodenTitel.Text;
             this.podcastEpisode.hosts = new List<string>(this.tbHosts.Text.Split(' '));
             this.podcastEpisode.spotify = this.tbSpotifyUrl.Text;
