@@ -9,7 +9,7 @@ namespace EpisodenEditor
     public class PodcastEpisode
     {
         public string username { get; set; }
-        public Guid guid { get; set; }
+        public string guid { get; set; }
         public string title { get; set; }
         public string spotify { get; set; }
         public string amazon { get; set; }
